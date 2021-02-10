@@ -6,31 +6,36 @@ const history = {}
 export default {
 	history: history,
 
-    getBars: function(symbolInfo, resolution, from, to, first, limit) {
+    getBars: function(symbolInfo, interval, from, to, first, limit) {						
+			const comps = symbolInfo.split(':')
+			var symbolName = (comps.length > 1 ? comps[1] : symbolInfo).toUpperCase();
 			const url = "/api/v3/klines"; 
 			const qs = {
-				symbol: "LTCBTC",
-				interval: "1d"
+				symbol: symbolName,
+				interval: interval,
+				startTime: from * 1000,
+				endTime: to * 1000,
+				limit: limit
 			}
         return rp({
                 url: `${api_root}${url}`,
                 qs,
             })
             .then(data => {
-                console.log({data})
+                console.log({data});
 				if (data.Response && data.Response === 'Error') {
-					console.log('CryptoCompare API error:',data.Message)
+					console.log('Binance API error:',data.Message)
 					return []
 				}
 				if (data.length) {
-					var bars = data.map(el => {
+					var bars = data.map(kline => {
 						return {
-							time: el[0],
-							low: el[3],
-							high: el[2],
-							open: el[1],
-							close: el[4],
-							volume: el[5],
+							time: kline[0],
+							low: parseFloat(kline[3]),
+							high: parseFloat(kline[2]),
+							open: parseFloat(kline[1]),
+							close: parseFloat(kline[4]),
+							volume: parseFloat(kline[5]),
 						}
 					})
 						if (first) {
@@ -41,6 +46,9 @@ export default {
 				} else {
 					return []
 				}
+			}).catch(err => {
+				console.log({err});
+				return []
 			})
 }
 }

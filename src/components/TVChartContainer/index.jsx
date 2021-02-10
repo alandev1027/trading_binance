@@ -12,8 +12,8 @@ function getLanguageFromURL() {
 export class TVChartContainer extends React.PureComponent {
 
 	static defaultProps = {
-		symbol: 'Coinbase:BTC/USD',
-		interval: '15',
+		symbol: 'BINANCE:LTCBTC',
+		interval: '60',
 		containerId: 'tv_chart_container',
 		libraryPath: '/charting_library/',
 		chartsStorageUrl: 'https://saveload.tradingview.com',
@@ -54,7 +54,6 @@ export class TVChartContainer extends React.PureComponent {
 				"mainSeriesProperties.candleStyle.wickDownColor": '#7f323f',
 			}
 		};
-
 		window.addEventListener('DOMContentLoaded',() => {
 		// window.TradingView.onready(() => {
 			const widget = window.tvWidget = new window.TradingView.widget(widgetOptions);
